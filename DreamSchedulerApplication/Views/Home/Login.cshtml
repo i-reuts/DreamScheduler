@@ -1,0 +1,26 @@
+﻿@model DreamSchedulerApplication.Models.LoginTest
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+<!--login form-->
+@using (Html.BeginForm("LoginValidation", "Home"))
+{
+    <fieldset>
+        @Html.Label("LOGIN")
+        <br />
+        <br />
+        @Html.LabelFor(model => model.Username)
+        @Html.TextBoxFor(model => model.Username)
+        @Html.ValidationMessageFor(model => model.Username)
+        <br />
+        @Html.LabelFor(model => model.Password)
+        @Html.PasswordFor(model => model.Password)
+        @Html.ValidationMessageFor(model => model.Password)
+        <p><button type="submit">submit</button></p>
+    </fieldset>
+}
+@{Html.EndForm();}

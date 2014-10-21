@@ -1,0 +1,26 @@
+﻿
+@model DreamSchedulerApplication.Models.LoginTest
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<!--account creation form-->
+@using (Html.BeginForm("CreateValidation", "Home"))
+{
+    <fieldset>
+        @Html.Label("CREATE USER ACCOUNT")
+        <br />
+        <br />
+        @Html.LabelFor(model => model.Username)
+        @Html.TextBoxFor(model => model.Username)
+        @Html.ValidationMessageFor(model => model.Username)
+        <br />
+        @Html.LabelFor(model => model.Password)
+        @Html.PasswordFor(model => model.Password)
+        @Html.ValidationMessageFor(model => model.Password)
+        <p><button type="submit">Save</button></p>
+    </fieldset>
+}
+@{Html.EndForm();}

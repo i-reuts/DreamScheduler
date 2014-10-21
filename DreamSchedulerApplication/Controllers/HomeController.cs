@@ -53,5 +53,83 @@ namespace DreamSchedulerApp.Controllers
 
             return View();
         }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult LoginValidation(LoginTest test)
+        {
+            if (ModelState.IsValid)
+            {
+                //store input in strings
+                string username = test.Username;
+                string password = test.Password;
+
+                GraphClient client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+                client.Connect();
+                //find user in database
+                try
+                {
+                    var query = client
+                    .Cypher
+                    .Match("(user:Account)")
+                    .Where((LoginTest account) => account.Password == password && account.Username == username)
+                    .Return(account => account.As<LoginTest>())
+                    .Results;
+                }
+                    //fuckkkkkkkkkkkkkkkkkkkkkk catch this shittttt if user not found catch error  NEED TO FIX this 
+                catch (Neo4jClient.NeoException error )
+                {
+                    if (error.NeoFullName == "org.neo4j.cypher.SyntaxException")
+                    {
+                        return View("login");
+                    }
+                    if( error.InnerException ==null)
+                    {
+                        return View("login");
+                    }
+                    if(error.HelpLink == null)
+                    {
+                        return View("login");
+                    }
+                }
+                
+                // save to db, for instance
+                return RedirectToAction("Contact");
+            }
+            // model is not valid
+            return View("login", test);
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateValidation(LoginTest test)
+        {
+            if (ModelState.IsValid)
+            {
+                // save to db, for instance
+                GraphClient client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+                client.Connect();
+                
+                //create newaccount object with input data
+                var newAccount = new LoginTest { Username = test.Username, Password = test.Password };
+               
+                // create the account in the database
+                client.Cypher
+                    .Create("(user:Account {newAcount})")
+                    .WithParam("newAcount", newAccount)//against cypher-injection 
+                    .ExecuteWithoutResults();
+                return RedirectToAction("About");
+            }
+            // model is not valid
+            return View("Create", test);
+        }
     }
 }
