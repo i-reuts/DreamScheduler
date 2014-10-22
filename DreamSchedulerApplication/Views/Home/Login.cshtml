@@ -5,7 +5,9 @@
 }
 
 <h2>Login</h2>
-
+@ViewBag.errorUsername
+@ViewBag.errorPassword
+@ViewBag.errorPassword1
 <!--login form-->
 @using (Html.BeginForm("LoginValidation", "Home"))
 {
