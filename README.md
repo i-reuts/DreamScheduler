@@ -21,3 +21,24 @@ SOEN 341 project - DreamTeam
     - it will create one user in the database
     - it will retrieve that user and send it to the view
     - other function are just redirecting to other view pages
+     
+### current app 
+
+ - still has the function from basic app if you want to understand the neo4jclient
+ - home page has a basic design 
+ - Login link in nav ( right side)
+  - if clicked it will redirect to login page
+    - user can login
+    - if user forget to fill a box, system will display a warning
+    - if user user a non existing account, system will display a danger notice
+    - if user enter wrong password : system display warning
+    - if successful : redirect to about page //for testing only will be changed
+    - also if succesful : login tab is changed to your username
+    - if user click create account, redirect to create page
+      - this page has same validation
+      - for now when user is created, redirect to about page
+      - `i will need to add protection against creating account with same username`
+ - to logout
+      - click username tab, then choose logout 
+  
+### so basic function =  create account, login, logout , validation   
