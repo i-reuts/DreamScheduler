@@ -23,7 +23,31 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("StudentRecord", "StudentRecord", "Home")</li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav navbar-nav navbar-right">
+                        <!--MAGIC...  check if user is logged in, if no link to login, else show username and dropdown list-->
+                        @{
+                            if (Session["User"] == null)
+                            {
+                                <a href="@Url.Action("Login", "Home")"><b>Login</b></a>
+                            }
+                            else
+                            {
+                                //user is logged in, output username 
+                                ViewBag.SessionUser = Session["User"];
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><b>@ViewBag.SessionUser</b><b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">MyAccount</a></li>
+                                    <li><a href="#">action</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="@Url.Action("Logout", "Home")">Logout</a></li> 
+                                </ul>
+                            }
+}
+                    </li>
+                </ul>     
             </div>
         </div>
     </div>
@@ -40,3 +64,5 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+

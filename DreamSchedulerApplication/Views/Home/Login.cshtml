@@ -4,25 +4,46 @@
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
-@ViewBag.errorUsername
-@ViewBag.errorPassword
-@ViewBag.errorPassword1
-<!--login form-->
-@using (Html.BeginForm("LoginValidation", "Home"))
-{
-    <fieldset>
-        @Html.Label("LOGIN")
-        <br />
-        <br />
-        @Html.LabelFor(model => model.Username)
-        @Html.TextBoxFor(model => model.Username)
-        @Html.ValidationMessageFor(model => model.Username)
-        <br />
-        @Html.LabelFor(model => model.Password)
-        @Html.PasswordFor(model => model.Password)
-        @Html.ValidationMessageFor(model => model.Password)
-        <p><button type="submit">submit</button></p>
-    </fieldset>
-}
-@{Html.EndForm();}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <!--login form-->
+            @using (Html.BeginForm("LoginValidation", "Home"))
+            {
+                <fieldset>
+                    @Html.Label("Login")
+                    <br />
+                    <br />
+                    @Html.LabelFor(model => model.Username)
+                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })  
+                    <b class="alert-danger">@ViewBag.errorUsername</b>
+                    <b class="alert-warning">@Html.ValidationMessageFor(model => model.Username)</b>
+                    <br />
+                    @Html.LabelFor(model => model.Password)
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                    <b class="alert-warning">@ViewBag.errorPassword</b>
+                    <b class="alert-warning">@Html.ValidationMessageFor(model => model.Password)</b>
+                    <br />
+                    <br />
+                    <p><button class="btn btn-primary" type="submit">Sign in</button></p>
+                </fieldset>
+            }
+            @{Html.EndForm();}
+        </div>
+
+        <div class="col-md-6">
+            <br />
+            <br />
+            <!--@Html.ActionLink("Create account Page", "Create")-->
+            <input type="button" class="btn btn-primary btn-lg btn-block" value=" create account" onclick="location.href='@Url.Action("Create", "Home" )'" />
+            
+        </div>
+
+    </div>
+</div>
+
+
+
