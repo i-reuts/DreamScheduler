@@ -31,7 +31,7 @@
                         @{
                             if (Session["User"] == null)
                             {
-                                <a href="@Url.Action("Login", "Home")"><b>Login</b></a>
+                                <a href="@Url.Action("Login", "Account")"><b>Login</b></a>
                             }
                             else
                             {
@@ -42,7 +42,7 @@
                                     <li><a href="#">MyAccount</a></li>
                                     <li><a href="#">action</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="@Url.Action("Logout", "Home")">Logout</a></li> 
+                                    <li><a href="@Url.Action("Logout", "Account")">Logout</a></li> 
                                 </ul>
                             }
 }
