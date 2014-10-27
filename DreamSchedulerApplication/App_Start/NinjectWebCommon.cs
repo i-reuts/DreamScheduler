@@ -1,7 +1,7 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DreamSchedulerPrototype.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DreamSchedulerPrototype.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DreamSchedulerApplication.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DreamSchedulerApplication.App_Start.NinjectWebCommon), "Stop")]
 
-namespace DreamSchedulerPrototype.App_Start
+namespace DreamSchedulerApplication.App_Start
 {
     using System;
     using System.Web;
@@ -10,7 +10,7 @@ namespace DreamSchedulerPrototype.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using DreamSchedulerPrototype.App_Start.Modules;
+    using DreamSchedulerApplication.App_Start.Modules;
 
     public static class NinjectWebCommon
     {

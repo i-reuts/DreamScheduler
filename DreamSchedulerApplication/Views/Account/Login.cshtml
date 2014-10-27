@@ -1,49 +1,54 @@
-﻿@model DreamSchedulerApplication.Models.LoginTest
+﻿@model DreamSchedulerApplication.Models.LoginViewModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Log in";
 }
 
+<!--testing popup if user try to access a page without being logged in... i will try to find another way using mvc -->
+@{
+    if (ViewBag.popup == "notlogged")
+    {
+        <script>alert("Access Restricted to user only");</script>
+    }
+}
 
-<div class="container">
-    <div class="row">
-
-        <div class="col-md-6">
-
-            <!--login form-->
-            @using (Html.BeginForm("LoginValidation", "Account"))
+<h2>@ViewBag.Title.</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
-                <fieldset>
-                    @Html.Label("Login")
-                    <br />
-                    <br />
-                    @Html.LabelFor(model => model.Username)
-                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })  
-                    <b class="alert-danger">@ViewBag.errorUsername</b>
-                    <b class="alert-warning">@Html.ValidationMessageFor(model => model.Username)</b>
-                    <br />
-                    @Html.LabelFor(model => model.Password)
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
-                    <b class="alert-warning">@ViewBag.errorPassword</b>
-                    <b class="alert-warning">@Html.ValidationMessageFor(model => model.Password)</b>
-                    <br />
-                    <br />
-                    <p><button class="btn btn-primary" type="submit">Sign in</button></p>
-                </fieldset>
+                @Html.AntiForgeryToken()
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Log in" class="btn btn-default" />
+                    </div>
+                </div>
+                <p>
+                    @Html.ActionLink("Register as a new user", "Register")
+                </p>
             }
-            @{Html.EndForm();}
-        </div>
-
-        <div class="col-md-6">
-            <br />
-            <br />
-            <!--@Html.ActionLink("Create account Page", "Create")-->
-            <input type="button" class="btn btn-primary btn-lg btn-block" value=" create account" onclick="location.href='@Url.Action("Create", "Account" )'" />
-            
-        </div>
-
+        </section>
     </div>
 </div>
 
-
-
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

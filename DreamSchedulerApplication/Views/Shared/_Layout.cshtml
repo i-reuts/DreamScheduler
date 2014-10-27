@@ -27,25 +27,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="nav navbar-nav navbar-right">
-                        <!--MAGIC...  check if user is logged in, if no link to login, else show username and dropdown list-->
-                        @{
-                            if (Session["User"] == null)
-                            {
-                                <a href="@Url.Action("Login", "Account")"><b>Login</b></a>
-                            }
-                            else
-                            {
-                                //user is logged in, output username 
-                                ViewBag.SessionUser = Session["User"];
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><b>@ViewBag.SessionUser</b><b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">MyAccount</a></li>
-                                    <li><a href="#">action</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="@Url.Action("Logout", "Account")">Logout</a></li> 
-                                </ul>
-                            }
-}
+                        @Html.Partial("_LoginPartial")         
                     </li>
                 </ul>     
             </div>

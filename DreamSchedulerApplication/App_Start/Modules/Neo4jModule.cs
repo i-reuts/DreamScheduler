@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 
 
-namespace DreamSchedulerPrototype.App_Start.Modules
+namespace DreamSchedulerApplication.App_Start.Modules
 {
     public class Neo4jModule : NinjectModule
     {
