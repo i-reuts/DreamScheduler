@@ -1,0 +1,38 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        @Html.ActionLink("DreamScheduler", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    </div>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("About", "About", "Home")</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+            @if (Session["User"] != null)
+            {
+                <li>@Html.ActionLink("CourseSequence", "CourseSequence", "Student")</li>
+                if (((DreamSchedulerApplication.Models.User)Session["User"]).Admin == true)
+                {
+                    <li>@Html.ActionLink("AdminStuff", "Index", "Admin")</li> 
+                }
+                else {
+                    <li>@Html.ActionLink("StudentRecord", "AcademicRecord", "Student")</li> 
+                }
+            }
+                
+            </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav navbar-nav navbar-right">
+                        @Html.Partial("_LoginPartial")
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>

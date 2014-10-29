@@ -4,12 +4,6 @@ using System.ComponentModel.DataAnnotations;
 namespace DreamSchedulerApplication.Models
 {
  
-        public class User
-        {
-            public String Username { get; set; }
-            public String Password { get; set; }
-        }
-
         public class LoginViewModel
         {
             [Required]
@@ -25,11 +19,12 @@ namespace DreamSchedulerApplication.Models
         public class RegisterViewModel
         {
             [Required(ErrorMessage = "Username is required")]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
             [Display(Name = "Username")]
             public string Username { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -41,15 +36,15 @@ namespace DreamSchedulerApplication.Models
 
             [Required(ErrorMessage = "Your first name is required")]
             [Display(Name = "First Name")]
-            public string first_name { get; set; }
+            public string FirstName { get; set; }
 
             [Required(ErrorMessage = "Your last name is required")]
             [Display(Name = "Last Name")]
-            public string last_name { get; set; }
+            public string LastName { get; set; }
 
             [Required(ErrorMessage = "Your student ID is required")]
             [Display(Name = "Student ID")]
-            public string student_id { get; set; }
+            public string StudentID { get; set; }
 
             [Required(ErrorMessage = "Your GPA is required")]
             [Display(Name = "GPA")]

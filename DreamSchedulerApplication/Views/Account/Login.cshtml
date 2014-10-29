@@ -4,15 +4,10 @@
     ViewBag.Title = "Log in";
 }
 
-<!--testing popup if user try to access a page without being logged in... i will try to find another way using mvc -->
-@{
-    if (ViewBag.popup == "notlogged")
-    {
-        <script>alert("Access Restricted to user only");</script>
-    }
-}
-
 <h2>@ViewBag.Title.</h2>
+
+<p style="color: red">@ViewBag.Message</p>
+
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Student Home Page";
+}
+
+<div class="jumbotron">
+    <h1>INDEX PAGE - Home</h1>
+
+
+ 
+   <!--testing popup if user try to access a page without being logged in... i will try to find another way using mvc -->
+    @{
+        if (ViewBag.popup == "notlogged")
+        {
+            <script>alert("Access Restricted to user only");</script>
+        }
+    }
+    
+    
+   
+    
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <div class="text-center">
+            <br/>
+            <img src="~/Content/images/sequencelogo.png" alt="...">
+            <div class="caption" >
+                <h2>Make sequence</h2>
+                <p><a href="#" class="btn btn-success" role="button">Button</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <div class="text-center">
+            <br/>
+            <img src="~/Content/images/courselogo.png" alt="...">
+            <div class="caption">
+                <h2>Browse Courses</h2>
+                <p><a href="#" class="btn btn-success" role="button">Button</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <div class="text-center">
+            <br/>
+            <img src="~/Content/images/contactlogo.png" alt="...">
+            <div class="caption">
+                <h2>Browse Professors</h2>
+                <p><a href="#" class="btn btn-success" role="button">Button</a></p>
+            </div>
+        </div>
+    </div>
+</div>

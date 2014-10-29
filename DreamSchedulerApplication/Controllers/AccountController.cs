@@ -17,11 +17,8 @@ namespace DreamSchedulerApplication.Controllers
             client = graphClient;
         }
 
-        private User user;
-
         //
         // GET: /Account/Login
-        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
@@ -30,44 +27,43 @@ namespace DreamSchedulerApplication.Controllers
         //
         // POST: /Account/Login
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //store input in strings
-                user = new User { Username = model.Username, Password = model.Password };
-
-                var query = client
-                                  .Cypher
-                                  .Match("(n:Account)")
-                                  .Where(((LoginViewModel n) => n.Username == user.Username))
-                                  .Return(n => n.As<LoginViewModel>())
-                                  .Results;
+                var user = new User();
 
                 try
                 {
-                    var testing = query.Single();
-                    if(PasswordHash.ValidatePassword(model.Password,testing.Password))
-                    {
+                    //Find user account
+                    //If not found, neo4j will throw an exception 
+                    user = client
+                                  .Cypher
+                                  .Match("(n:User)")
+                                  .Where(((User n) => n.Username == model.Username))
+                                  .Return(n => n.As<User>())
+                                  .Results.Single();
+                }
+                catch (InvalidOperationException)
+                {
+                    //If account not found, display invalid user account error 
+                    ViewBag.Message = "A user with this username does not exist";
+                    return View("login");
+                }
+
+                if(PasswordHash.ValidatePassword(model.Password,user.Password))
+                {
                         //if user is logged in, create session
-                        Session["User"] = user.Username;
-                        return RedirectToAction("Index", "Home");
+                        Session["User"] = user;
+                        if (user.Admin) return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Student");
                     }
                     else
                     {
-                        ViewBag.errorPassword = "password is wrong, try again";
+                        ViewBag.Message = "Wrong password, please try again";
                         return View("login");
                     }
-                } //if we can't find the account = it doest not exist, neo4j will cause a error 
-                catch (InvalidOperationException)
-                {
-                    //error invalid user account 
-                    
-                    ViewBag.errorUsername = "this user does not exist ";
-                    return View("login");
-                }
             }
 
             // model is not valid
@@ -76,7 +72,6 @@ namespace DreamSchedulerApplication.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -85,30 +80,41 @@ namespace DreamSchedulerApplication.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var encryptedPassword = PasswordHash.CreateHash(model.Password);
-                var newAccount = new User { Username = model.Username, Password = encryptedPassword };
+                var newUser= new User { Username = model.Username, Password = encryptedPassword };
 
-                var newStudent = new Student { first_name = model.first_name, last_name = model.last_name, student_id = model.student_id, GPA = model.GPA };
+                var newStudent = new Student { FirstName = model.FirstName, LastName = model.LastName, StudentID = model.StudentID, GPA = model.GPA };
 
                 // create the account in the database
-                client.Cypher
-                             .Create("(u:User {newAcount})-[:is_a]->(s:Student {newStudent})")
-                             .WithParam("newAcount", newAccount)
-                             .WithParam("newStudent", newStudent)
-                             .ExecuteWithoutResults();
+                try
+                {
+                    client.Cypher
+                                .Create("(u:User {newAccount})-[:IsA]->(s:Student {newStudent})")
+                                .WithParam("newAccount", newUser)
+                                .WithParam("newStudent", newStudent)
+                                .ExecuteWithoutResults();
+                }
+                catch (Neo4jClient.NeoException exception)
+                {
+                    if (exception.Message.Contains("Username")) { ViewBag.Message = "User with such username already exists"; return View("Register"); }
+                    else if (exception.Message.Contains("StudentID")) { ViewBag.Message = "Student with such student ID number already exists"; return View("Register"); }
+                    else throw exception;
+                }
 
-                return RedirectToAction("About", "Home");
+                //Create new session
+                Session["User"] = newUser;
+                return RedirectToAction("Index", "Student");
             }
 
             // model is not valid
             return View(model);
         }
+
 
         //
         // POST: /Account/LogOff
@@ -117,7 +123,7 @@ namespace DreamSchedulerApplication.Controllers
         public ActionResult LogOff()
         {
             Session.Clear();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
     }

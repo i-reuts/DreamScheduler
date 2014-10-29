@@ -5,24 +5,37 @@ using System.Web;
 
 namespace DreamSchedulerApplication.Models
 {
+    public class User
+    {
+        public String Username { get; set; }
+        public String Password { get; set; }
+
+        public bool Admin { get; set; }
+    }
+
     public class Student
     {
-        public string first_name { get; set; }
-        public string last_name { get; set; }
-        public string student_id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string StudentID { get; set; }
         public string GPA { get; set; }
     }
 
     public class Course
     {
-        public string code { get; set; }
-        public string title { get; set; }
-        public string credits { get; set; }
+        public string Code { get; set; }
+        public string Title { get; set; }
+        public string Credits { get; set; }
     }
 
     public class Completed
     {
-        public string grade { get; set; }
-        public int semester { get; set; }
+        public string Grade { get; set; }
+        public int Semester { get; set; }
+    }
+
+    public class ContainsCourse
+    {
+        public int SemesterInSequence { get; set; }
     }
 }
