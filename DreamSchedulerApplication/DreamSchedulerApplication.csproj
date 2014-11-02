@@ -198,6 +198,7 @@
     <Content Include="Views\Student\CourseSequence.cshtml" />
     <Content Include="Views\AcademicRecord\EditCourseEntry.cshtml" />
     <Content Include="Views\AcademicRecord\CreateCourseEntry.cshtml" />
+    <Content Include="Views\AcademicRecord\DeleteCourseEntry.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

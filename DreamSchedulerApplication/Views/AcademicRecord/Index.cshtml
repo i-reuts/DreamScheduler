@@ -15,6 +15,19 @@
 <table class="table">
 
     <caption style="margin-bottom: 30px; font-weight: bold">Courses Completed</caption>
+
+    <tr>
+        <th>
+            Course Code
+        </th>
+        <th>
+            Semester
+        </th>
+        <th>
+            Grade
+        </th>
+        <th></th>
+    </tr>
     @foreach (var item in Model.CompletedCourses)
     {
         <tr>
@@ -29,8 +42,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "EditCourseEntry", new { code = item.Course.Code }) |
-                @Html.ActionLink("Details", "Details", new { code = item.Course.Code }) |
-                @Html.ActionLink("Delete", "Delete", new { code = item.Course.Code })
+                @Html.ActionLink("Delete", "DeleteCourseEntry", new { code = item.Course.Code })
             </td>
         </tr>
     }

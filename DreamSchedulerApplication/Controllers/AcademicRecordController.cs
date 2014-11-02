@@ -24,17 +24,17 @@ namespace DreamSchedulerApplication.Controllers
 
             var academicRecord = new AcademicRecord();
 
-            var student = client.Cypher
-                         .Match("(s:Student)")
-                         .Where((Student s) => s.StudentID == "123456")
-                         .Return((s) => s.As<Student>())
-                         .Results.First();
+            var currentStudent =   client.Cypher
+                                    .Match("(u:User)-->(s:Student)")
+                                    .Where((User u) => u.Username == HttpContext.User.Identity.Name)
+                                    .Return((s) => s.As<Student>())
+                                    .Results.First();
 
-            academicRecord.Student = student;
+            academicRecord.Student = currentStudent;
 
             academicRecord.CompletedCourses = client.Cypher
                          .Match("(s:Student)-[r:Completed]->(c:Course)")
-                         .Where((Student s) => s.StudentID == "123456")
+                         .Where((Student s) => s.StudentID == currentStudent.StudentID)
                          .Return((c, r) => new AcademicRecord.CourseEntry
                          {
                              Course = c.As<Course>(),
@@ -61,14 +61,14 @@ namespace DreamSchedulerApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Add course
-                client.Cypher
-                .Match("(c:Course), (s:Student)")
-                .Where((Course c) => c.Code == courseEntry.Course.Code)
-                .AndWhere((Student s) => s.StudentID == "123456")
-                .Create("(s)-[r:Completed {completed}]->(c)")
-                .WithParam("completed", courseEntry.Completed)
-                .ExecuteWithoutResults();
+                 //Add course
+                 client.Cypher
+                 .Match("(c:Course), (u:User)-->(s:Student)")
+                 .Where((Course c) => c.Code == courseEntry.Course.Code)
+                 .AndWhere((User u) => u.Username == HttpContext.User.Identity.Name)
+                 .Create("(s)-[r:Completed {completed}]->(c)")
+                 .WithParam("completed", courseEntry.Completed)
+                 .ExecuteWithoutResults();
 
                 return RedirectToAction("Index");
             }
@@ -84,8 +84,8 @@ namespace DreamSchedulerApplication.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             AcademicRecord.CourseEntry completedCourse = client.Cypher
-                         .Match("(s:Student)-[r:Completed]->(c:Course)")
-                         .Where((Student s, Course c) => s.StudentID == "123456")
+                         .Match("(u:User)-->(s:Student)-[r:Completed]->(c:Course)")
+                         .Where((User u) => u.Username == HttpContext.User.Identity.Name)
                          .AndWhere((Course c) => c.Code == code)
                          .Return((c, r) => new AcademicRecord.CourseEntry
                          {
@@ -111,16 +111,62 @@ namespace DreamSchedulerApplication.Controllers
             if (ModelState.IsValid)
             {
                 client.Cypher
-                         .Match("(s:Student)-[r:Completed]->(c:Course)")
-                         .Where((Student s, Course c) => s.StudentID == "123456")
+                         .Match("(u:User)-->(s:Student)-[r:Completed]->(c:Course)")
+                         .Where((User u) => u.Username == HttpContext.User.Identity.Name)
                          .AndWhere((Course c) => c.Code == completedCourse.Course.Code)
                          .Set("r = {newRelationship}")
                          .WithParam("newRelationship", completedCourse.Completed)
                          .ExecuteWithoutResults();
 
-                return RedirectToAction("AcademicRecord");
+                return RedirectToAction("Index");
             }
             return View(completedCourse);
+        }
+
+        // GET: Movies/Edit/5
+        public ActionResult DeleteCourseEntry(string code)
+        {
+            if (code == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            AcademicRecord.CourseEntry completedCourse = client.Cypher
+                         .Match("(u:User)-->(s:Student)-[r:Completed]->(c:Course)")
+                         .Where((User u) => u.Username == HttpContext.User.Identity.Name)
+                         .AndWhere((Course c) => c.Code == code)
+                         .Return((c, r) => new AcademicRecord.CourseEntry
+                         {
+                             Completed = r.As<Completed>(),
+                             Course = c.As<Course>()
+                         })
+                         .Results
+                         .Single();
+            if (completedCourse == null)
+            {
+                return HttpNotFound();
+            }
+            return View(completedCourse);
+        }
+
+        // POST: Movies/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("DeleteCourseEntry")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteCourse(string code)
+        {
+            if (ModelState.IsValid)
+            {
+                client.Cypher
+                         .Match("(u:User)-->(s:Student)-[r:Completed]->(c:Course)")
+                         .Where((User u) => u.Username == HttpContext.User.Identity.Name)
+                         .AndWhere((Course c) => c.Code == code)
+                         .Delete("r")
+                         .ExecuteWithoutResults();
+
+                return RedirectToAction("Index");
+            }
+            return View(code);
         }
 
 

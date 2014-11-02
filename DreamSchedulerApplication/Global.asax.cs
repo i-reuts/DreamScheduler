@@ -50,7 +50,9 @@ namespace DreamSchedulerApplication
                         }
                         catch(InvalidOperationException)
                         {
-                            //User not found
+                            //  Will occur if 
+                            //  1) the database has no users
+                            //  2) User not found, should not happen
                         }
 
 

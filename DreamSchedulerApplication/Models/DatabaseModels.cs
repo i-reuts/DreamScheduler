@@ -34,6 +34,7 @@ namespace DreamSchedulerApplication.Models
     public class Completed
     {
         public string Grade { get; set; }
+        [Display(Name = "Semester Completed")]
         public int Semester { get; set; }
     }
 
