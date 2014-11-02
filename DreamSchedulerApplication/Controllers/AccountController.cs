@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using DreamSchedulerApplication.Models;
 using DreamSchedulerApplication.Libraries;
+using System.Web.Security;
 
 namespace DreamSchedulerApplication.Controllers
 {
@@ -47,21 +48,21 @@ namespace DreamSchedulerApplication.Controllers
                 }
                 catch (InvalidOperationException)
                 {
-                    //If account not found, display invalid user account error 
-                    ViewBag.Message = "A user with this username does not exist";
+                    //If account not found, display invalid user account error
+                    ModelState.AddModelError("", "A user with this username does not exist");
                     return View("login");
                 }
 
                 if(PasswordHash.ValidatePassword(model.Password,user.Password))
                 {
-                        //if user is logged in, create session
-                        Session["User"] = user;
-                        if (user.Admin) return RedirectToAction("Index", "Admin");
+                        //if user is logged in, create an encrypted cookie
+                        FormsAuthentication.SetAuthCookie(user.Username, false);
+                        if (user.Roles.Contains("admin")) return RedirectToAction("Index", "Admin");
                         return RedirectToAction("Index", "Student");
                     }
                     else
                     {
-                        ViewBag.Message = "Wrong password, please try again";
+                        ModelState.AddModelError("", "The user name or password provided is incorrect");
                         return View("login");
                     }
             }
@@ -86,7 +87,7 @@ namespace DreamSchedulerApplication.Controllers
             if (ModelState.IsValid)
             {
                 var encryptedPassword = PasswordHash.CreateHash(model.Password);
-                var newUser= new User { Username = model.Username, Password = encryptedPassword };
+                var newUser= new User { Username = model.Username, Password = encryptedPassword, Roles = "student" };
 
                 var newStudent = new Student { FirstName = model.FirstName, LastName = model.LastName, StudentID = model.StudentID, GPA = model.GPA };
 
@@ -101,13 +102,13 @@ namespace DreamSchedulerApplication.Controllers
                 }
                 catch (Neo4jClient.NeoException exception)
                 {
-                    if (exception.Message.Contains("Username")) { ViewBag.Message = "User with such username already exists"; return View("Register"); }
-                    else if (exception.Message.Contains("StudentID")) { ViewBag.Message = "Student with such student ID number already exists"; return View("Register"); }
+                    if (exception.Message.Contains("Username")) { ModelState.AddModelError("","User with such username already exists"); return View("Register"); }
+                    else if (exception.Message.Contains("StudentID")) { ModelState.AddModelError("", "Student with such student ID number already exists"); return View("Register"); }
                     else throw exception;
                 }
 
                 //Create new session
-                Session["User"] = newUser;
+                FormsAuthentication.SetAuthCookie(newUser.Username, false);
                 return RedirectToAction("Index", "Student");
             }
 
@@ -122,7 +123,7 @@ namespace DreamSchedulerApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            Session.Clear();
+            FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
 

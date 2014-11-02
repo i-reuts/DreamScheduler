@@ -28,11 +28,13 @@
                 @Html.DisplayFor(modelItem => item.Completed.Grade)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Course.Code }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Course.Code }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Course.Code })
+                @Html.ActionLink("Edit", "EditCourseEntry", new { code = item.Course.Code }) |
+                @Html.ActionLink("Details", "Details", new { code = item.Course.Code }) |
+                @Html.ActionLink("Delete", "Delete", new { code = item.Course.Code })
             </td>
         </tr>
     }
 
 </table>
+
+<p>@Html.ActionLink("Create New", "CreateCourseEntry")</p>

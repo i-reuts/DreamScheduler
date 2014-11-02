@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -10,7 +11,7 @@ namespace DreamSchedulerApplication.Models
         public String Username { get; set; }
         public String Password { get; set; }
 
-        public bool Admin { get; set; }
+        public string Roles { get; set; }
     }
 
     public class Student
@@ -23,7 +24,9 @@ namespace DreamSchedulerApplication.Models
 
     public class Course
     {
+        [Display(Name = "Course Code")]
         public string Code { get; set; }
+
         public string Title { get; set; }
         public string Credits { get; set; }
     }

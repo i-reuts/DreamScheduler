@@ -14,15 +14,16 @@
             <li>@Html.ActionLink("About", "About", "Home")</li>
             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
 
-            @if (Session["User"] != null)
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
                 <li>@Html.ActionLink("CourseSequence", "CourseSequence", "Student")</li>
-                if (((DreamSchedulerApplication.Models.User)Session["User"]).Admin == true)
+                if (HttpContext.Current.User.IsInRole("admin"))
                 {
                     <li>@Html.ActionLink("AdminStuff", "Index", "Admin")</li> 
                 }
-                else {
-                    <li>@Html.ActionLink("StudentRecord", "AcademicRecord", "Student")</li> 
+                else if (HttpContext.Current.User.IsInRole("student"))
+                {
+                    <li>@Html.ActionLink("StudentRecord", "Index", "AcademicRecord")</li> 
                 }
             }
                 
